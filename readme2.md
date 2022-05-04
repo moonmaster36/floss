@@ -19,9 +19,11 @@ floss [-s speed] <input_path> <output_path>
 ```
 
 ## Examples
+To use the default program speed.
 ```bash
 floss stock-data.csv output.json
 ```
+To change the program speed.
 ```bash
 floss -s 0.5 stock-data.csv output.json
 ```
