@@ -6,6 +6,7 @@ Description:
     * Reads file paths from given input file.
     * Input file only accepts .txt or .csv files
     * Speed is optional. Default value is 1.
+
 Parameters:
     - input_path: Text file containing path to data
     - output_path: JSON file to write data to
