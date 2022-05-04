@@ -8,7 +8,10 @@ CS 361 Assignment 7 Micro-Service
     * Speed is optional. Default value is 1.
 
 Instructions:
-* Request data by writing file path to input file. 
+   1. Place floss.py in the root folder of your project directory.
+   2. Start the program.
+   3. Request data by writing a file path to chosen input file.
+   4. Retrieve retrieve data by reading from chosen output file.
 
 * Parameters:
     - input_path: Text file containing path to data
