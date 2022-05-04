@@ -6,5 +6,5 @@ Place floss.py in the root folder of your project directory.
 
 ## Usage
 ````python
-floss <input_path> <output_path>`
+floss <input_path> <output_path>
 ```
