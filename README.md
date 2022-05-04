@@ -1,27 +1,32 @@
-# floss
-CS 361 Assignment 7 Micro-Service
+# floss - a financial data conversion tool
 
 ## Description
- * Converts stock data from text and csv files to json 
- * Reads file paths from given input file.
- * Input file only accepts .txt or .csv files
- * Speed is optional. Default value is 1.
+* Converts stock data from .csv and .txt files to json
+* Default refresh rate is 1 second.
 
-## Parameters
- * input_path: Text file containing path to data
- * output_path: JSON file to write data to
- * speed: speed at which program checks input file for new path
+## Installation
+ Place floss.py in the root folder of your project directory.
 
 ## Instructions
-1. Place floss.py in the root folder of your project directory.
-2. Start the program.
-3. Request data by writing a file path to chosen input file.
-4. Retrieve retrieve data by reading from chosen output file.
+1. Run the program by specifying the input path and output path. (use -s to adjust speed)
+2. Request data by writing a file path to chosen input file.
+3. Retrieve retrieve data by reading from chosen output file.
 
-## Example Usage 
-  ###### without optional speed argument
-  floss input.txt output-file.json
 
-  floss --speed 2 input.txt output-file.json
-  floss -s 2 input.txt output-file.json 
+## Usage
+```bash
+floss [-s speed] <input_path> <output_path>
+```
+
+## Examples
+To use the default program speed.
+```bash
+floss stock-data.csv output.json
+```
+To change the program speed.
+```bash
+floss -s 0.5 stock-data.csv output.json
+```
+
+##### CS361 Microservice
 
