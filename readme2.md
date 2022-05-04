@@ -1,5 +1,5 @@
-# floss - a stock data converter
-CS 361 Assignment 7 Micro-Service
+# floss - a financial data conversion tool
+
 
 ## Installation
 Place floss.py in the root folder of your project directory.
@@ -8,3 +8,5 @@ Place floss.py in the root folder of your project directory.
 ```python
 floss <input_path> <output_path>
 ```
+##### CS361 Microservice
+
