@@ -12,7 +12,6 @@ import argparse
 import json
 import csv
 
-
 class Floss:
     def __init__(self):
         self.speed = None
@@ -141,8 +140,15 @@ class Floss:
 
     @staticmethod
     def validate_arguments(stream_path, output_path):
-        
-        
+        """Validates file paths given as arguments.
+
+        Args:
+            stream_path (.txt): file to read data paths from
+            output_path (.json): file to write data to
+
+        Returns:
+            bool: True if paths are valid, false if not
+        """        
         # Check if stream path exists
         if not os.path.isfile(stream_path):
             print('Stream file not found.')
@@ -170,6 +176,16 @@ class Floss:
         return True
 
     def file_service(self, input_path, output_path):
+        """Reads paths from stream file, then converts
+            the .txt or .csv file into json data.
+
+        Args:
+            input_path (.txt or .csv): path to data
+            output_path (.json): path to output file
+
+        Returns:
+            _type_: True if data was written, False if not.
+        """
         # Check if input path exists
         if not os.path.isfile(input_path):
             print('Input file not found.')
@@ -209,6 +225,12 @@ class Floss:
         return True
 
     def read_file_stream(self, stream_path):
+        """Core loop of program.
+            Reads data path files, fetches data, writes data to output.
+
+        Args:
+            stream_path (.txt): input file to read data paths from
+        """
         # Wait for changes in input file.
         last_size = 0
         last_path = ''
@@ -235,7 +257,13 @@ class Floss:
 
         print(f'\nStream stopped.')
 
-    def main_loop(self):
+    def main_loop(self):       
+        """Calls all functions needed to operate program.
+
+        Returns:
+            int: 0 if program exited successfuly, else 1
+        """
+        
         # get args
         stream_path, output_path = self.argument_handler()
         # stream_path = 'stream.txt'
@@ -263,7 +291,7 @@ class Floss:
 
         # Read from stream file for input paths.
         self.read_file_stream(stream_path)
-
+        sys.exit(0)
 
 if __name__ == '__main__':
     floss = Floss()
