@@ -289,11 +289,15 @@ class Floss:
             last_size = 0
             data_written = False
             run = True
+            input_message_written = False
+
             while run:
                 # On change, copy contents of input file. Write contents to given output JSON file.
                 file_size = os.path.getsize(stream_path)
                 output_size = os.path.getsize(self.output_path)
-                if file_size != last_size and output_size == 0:
+                
+                
+                if file_size > 0 and output_size == 0:
                     # Attempt to read the path input from stream file
                     with open(stream_path, "r") as f:
                         data_path = f.readline()
@@ -305,10 +309,11 @@ class Floss:
                         result = self.file_service(data_path, self.output_path)
                         run = result
 
-                elif output_size > 0:
+                elif output_size > 0 and file_size > 0:
                     print('Waiting for space in destination.')
-                else:
+                elif file_size == 0 and not input_message_written:
                     print('Waiting for input.')
+                    input_message_written = True
 
                 time.sleep(self.speed)
 
