@@ -250,35 +250,6 @@ class Floss:
         # Read from stream file for input paths.
         self.read_file_stream(stream_path, output_path)
 
-    def test_read_file_stream(self, stream_path):
-        """Main loop of program."""
-        # Wait for changes in input file.
-        last_size = 0
-        run = True
-        while run:
-            # On change, copy contents of input file. Write contents to given output JSON file.
-            file_size = os.path.getsize(stream_path)
-            output_size = os.path.getsize(self.output_path)
-            if file_size != last_size and output_size == 0:
-                # Attempt to read the path input from stream file
-                with open(stream_path, "r") as f:
-                    data_path = f.readline()
-
-                    print(f'data_path: {data_path}')
-                    # Track the last stock_path entered
-                    last_size = file_size
-
-                    result = self.file_service(data_path, self.output_path)
-                    run = result
-            elif output_size > 0:
-                print('Waiting for space in destination.')
-            else:
-                print('Waiting for input.')
-
-            time.sleep(self.speed)
-
-        print(f'\nStream stopped.')
-
     def test_loop(self):
         t = '*********************'
         print(f'{t}\nENTERING TEST LOOP\n{t}\n')
@@ -311,6 +282,37 @@ class Floss:
 
         # Read from stream file for input paths.
         self.test_read_file_stream(stream_path)
+
+        def test_read_file_stream(self, stream_path):
+            """Main loop of program."""
+            # Wait for changes in input file.
+            last_size = 0
+            data_written = False
+            run = True
+            while run:
+                # On change, copy contents of input file. Write contents to given output JSON file.
+                file_size = os.path.getsize(stream_path)
+                output_size = os.path.getsize(self.output_path)
+                if file_size != last_size and output_size == 0:
+                    # Attempt to read the path input from stream file
+                    with open(stream_path, "r") as f:
+                        data_path = f.readline()
+
+                        print(f'data_path: {data_path}')
+                        # Track the last stock_path entered
+                        last_size = file_size
+
+                        result = self.file_service(data_path, self.output_path)
+                        run = result
+
+                elif output_size > 0:
+                    print('Waiting for space in destination.')
+                else:
+                    print('Waiting for input.')
+
+                time.sleep(self.speed)
+
+            print(f'\nStream stopped.')
 
 
 if __name__ == '__main__':
