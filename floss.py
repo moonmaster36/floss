@@ -206,6 +206,33 @@ class Floss:
 
         return True
 
+    def read_file_stream(self, stream_path):
+        # Wait for changes in input file.
+        last_size = 0
+        last_path = ''
+        run = True
+
+        while run:
+            # On change, copy contents of input file. Write contents to given output JSON file.
+            file_size = os.path.getsize(stream_path)
+            output_size = os.path.getsize(self.output_path)
+
+            if file_size > 0 and output_size == 0:
+                # Attempt to read the path input from stream file
+                with open(stream_path, "r") as f:
+                    data_path = f.readline()
+                    if data_path != last_path:  # If this is a new path, fetch data.
+                        # Track the last stock_path entered
+                        last_size = file_size
+                        last_path = data_path
+                        result = self.file_service(
+                            data_path, self.output_path)
+                        run = result
+
+            time.sleep(self.speed)
+
+        print(f'\nStream stopped.')
+
     def main_loop(self):
         # get args
         stream_path, output_path = self.argument_handler()
@@ -234,33 +261,6 @@ class Floss:
 
         # Read from stream file for input paths.
         self.read_file_stream(stream_path)
-
-    def read_file_stream(self, stream_path):
-        # Wait for changes in input file.
-        last_size = 0
-        last_path = ''
-        run = True
-
-        while run:
-            # On change, copy contents of input file. Write contents to given output JSON file.
-            file_size = os.path.getsize(stream_path)
-            output_size = os.path.getsize(self.output_path)
-
-            if file_size > 0 and output_size == 0:
-                # Attempt to read the path input from stream file
-                with open(stream_path, "r") as f:
-                    data_path = f.readline()
-                    if data_path != last_path:  # If this is a new path, fetch data.
-                        # Track the last stock_path entered
-                        last_size = file_size
-                        last_path = data_path
-                        result = self.file_service(
-                            data_path, self.output_path)
-                        run = result
-
-            time.sleep(self.speed)
-
-        print(f'\nStream stopped.')
 
 
 if __name__ == '__main__':
