@@ -1,7 +1,0 @@
-./data/companies.csv
-
-./data/finance.csv
-
-python floss.py -s 2.5 input.txt output.json
-
-python floss.py -s 2.5 input2.txt output2.json
