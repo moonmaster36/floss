@@ -124,12 +124,12 @@ class Floss:
             return data
 
     def csv_service(self, csv_path, output_path):
-        """
-        * Extracts data from .csv file and writes it to the
-            specified output in JSON format.
+        """Extracts data from .csv file and writes it to the
+            specified output file in JSON format.
 
-        csvfile: path to .cvs file containing data.
-        json_file: path to .json file to write data.
+        Args:
+            csv_path (.csv): source of data
+            output_path (.json): file to write data to
         """
         data = self.get_csv_data(csv_path)
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -141,6 +141,8 @@ class Floss:
 
     @staticmethod
     def validate_arguments(stream_path, output_path):
+        
+        
         # Check if stream path exists
         if not os.path.isfile(stream_path):
             print('Stream file not found.')
