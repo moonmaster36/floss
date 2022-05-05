@@ -16,9 +16,6 @@ import csv
 class Floss:
     def __init__(self):
         self.speed = None
-        self.stream_path = None
-        self.input_path = None
-        self.output_path = None
 
     def argument_handler(self):
         """
@@ -31,7 +28,7 @@ class Floss:
         """
         parser = argparse.ArgumentParser(prog="floss",
                                          description="Converts stock data from text and csv files to json",
-                                         usage="%(prog)s [options] input_path output_path")
+                                         usage="py %(prog)s [options] input_path output_path")
         parser.add_argument("-s", "--speed", help="Changes how quickly the stream_path is re-checked.",
                             type=float, action='store', default=1)
         parser.add_argument("input_path", help="Text file containing path to data", type=str)
@@ -211,8 +208,10 @@ class Floss:
 
                 result = self.file_service(data_path, output_path)
                 run = result
+            elif output_size > 0:
+                print('Waiting for space in destination.')
             else:
-                print('Waiting for space in output.')
+                print('Waiting for input.')
         print(f'\nStream stopped.')
 
     def main_loop(self):
