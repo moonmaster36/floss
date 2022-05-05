@@ -84,7 +84,6 @@ class Floss:
                 cur['ticker'] = ticker
 
                 stocks.append(cur)
-
             return {'data': stocks}
 
     @staticmethod
