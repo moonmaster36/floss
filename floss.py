@@ -2,7 +2,7 @@
 Frank Vaughan
 CS361: Software Engineering I
 Assignment 7
-g"""
+"""
 
 import time
 import os
