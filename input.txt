@@ -1,1 +1,1 @@
-./data/companies.csv
+./data/finance.csv

@@ -13,9 +13,11 @@ import json
 import csv
 
 
-class Floss:    
+class Floss:
     def __init__(self):
         self.speed = None
+        self.stream_path = None
+        self.output_path = None
 
     def argument_handler(self):
         """Returns arguments given from command line.
@@ -41,8 +43,10 @@ class Floss:
 
         self.speed = args.speed
         print(f'speed = {self.speed}')
+
         stream_path = args.input_path
         output_path = args.output_path
+        self.stream_path = output_path
         self.output_path = output_path
 
         return stream_path, output_path
@@ -123,13 +127,11 @@ class Floss:
         """
         * Extracts data from .csv file and writes it to the
             specified output in JSON format.
-        
+
         csvfile: path to .cvs file containing data.
         json_file: path to .json file to write data.
         """
-        
         data = self.get_csv_data(csv_path)
-
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
@@ -204,41 +206,12 @@ class Floss:
 
         return True
 
-    def read_file_stream(self, stream_path, output_path):
-        """Main loop of program."""
-        # Wait for changes in input file.
-        last_size = 0
-        run = True
-        while run:
-            # Attempt to read the path input from stream file
-            with open(stream_path, "r") as f:
-                data_path = f.readline()
-            time.sleep(self.speed)
-
-            # On change, copy contents of input file. Write contents to given output JSON file.
-            file_size = os.path.getsize(stream_path)
-            output_size = os.path.getsize(output_path)
-            if file_size != last_size and output_size == 0:
-                print(f'data_path: {data_path}')
-                # Track the last stock_path entered
-                last_size = file_size
-
-                result = self.file_service(data_path, output_path)
-                run = result
-            elif output_size > 0:
-                print('Waiting for space in destination.')
-            else:
-                print('Waiting for input.')
-        print(f'\nStream stopped.')
-
     def main_loop(self):
         # get args
         stream_path, output_path = self.argument_handler()
         # stream_path = 'stream.txt'
         # output_path = 'output.json'
-        print(F'stream_path: {stream_path}')
-        print(F'output_path: {output_path}\n')
-
+        print(f'Reading data file paths from {stream_path}')
         # Validate args.
         if not self.validate_arguments(stream_path, output_path):
             return 'Invalid args'
@@ -260,43 +233,9 @@ class Floss:
                 sys.exit(1)
 
         # Read from stream file for input paths.
-        self.read_file_stream(stream_path, output_path)
+        self.read_file_stream(stream_path)
 
-    def test_loop(self):
-        t = '*********************'
-        print(f'{t}\nENTERING TEST LOOP\n{t}\n')
-        # get args
-        stream_path, output_path = self.argument_handler()
-        # stream_path = 'stream.txt'
-        # output_path = 'output.json'
-        print(F'stream_path: {stream_path}')
-        print(F'output_path: {output_path}\n')
-
-        # Validate args.
-        if not self.validate_arguments(stream_path, output_path):
-            return 'Invalid args'
-
-        # Check if output_path is empty.
-        if os.path.getsize(output_path) > 0:
-            # Ask user if they want to rewrite the output_path, or exit.
-            text = input(f"{output_path} is not empty. Overwrite? y/n ")
-            text = text.lower()
-            if len(text) > 1:
-                print("Invalid response. Exiting floss.")
-                sys.exit(1)
-            if text == 'y':
-                # Erase contents of output_path
-                open(output_path, 'w').close()
-            else:
-                # Exit
-                print("Exiting floss.")
-                sys.exit(1)
-
-        # Read from stream file for input paths.
-        self.test_read_file_stream(stream_path)
-
-    def test_read_file_stream(self, stream_path):
-        """Main loop of program."""
+    def read_file_stream(self, stream_path):
         # Wait for changes in input file.
         last_size = 0
         last_path = ''
@@ -306,13 +245,12 @@ class Floss:
             # On change, copy contents of input file. Write contents to given output JSON file.
             file_size = os.path.getsize(stream_path)
             output_size = os.path.getsize(self.output_path)
-            
+
             if file_size > 0 and output_size == 0:
                 # Attempt to read the path input from stream file
                 with open(stream_path, "r") as f:
                     data_path = f.readline()
                     if data_path != last_path:  # If this is a new path, fetch data.
-                        print(f'data_path: {data_path}')
                         # Track the last stock_path entered
                         last_size = file_size
                         last_path = data_path
@@ -327,5 +265,4 @@ class Floss:
 
 if __name__ == '__main__':
     floss = Floss()
-    # floss.main_loop()
-    floss.test_loop()
+    floss.main_loop()
