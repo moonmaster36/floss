@@ -28,7 +28,7 @@ class Floss:
         """
         parser = argparse.ArgumentParser(prog="floss",
                                          description="Converts stock data from text and csv files to json",
-                                         usage="py %(prog)s [options] input_path output_path")
+                                         usage="py %(prog)s.py [options] input_path output_path")
         parser.add_argument("-s", "--speed", help="Changes how quickly the stream_path is re-checked.",
                             type=float, action='store', default=1)
         parser.add_argument("input_path", help="Text file containing path to data", type=str)

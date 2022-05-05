@@ -15,7 +15,7 @@
 
 ## Usage
 ```bash
-python floss [-s speed] <input_path> <output_path>
+python floss.py [-s speed] <input_path> <output_path>
 ```
 
 ## Examples
