@@ -31,8 +31,10 @@ class Floss:
                                          usage="py %(prog)s.py [options] input_path output_path")
         parser.add_argument("-s", "--speed", help="Changes how quickly the stream_path is re-checked.",
                             type=float, action='store', default=1)
-        parser.add_argument("input_path", help="Text file containing path to data", type=str)
-        parser.add_argument("output_path", help="JSON file to write data to", type=str)
+        parser.add_argument(
+            "input_path", help="Text file containing path to data", type=str)
+        parser.add_argument(
+            "output_path", help="JSON file to write data to", type=str)
 
         args = parser.parse_args()
 
@@ -43,6 +45,7 @@ class Floss:
         print(f'speed = {self.speed}')
         stream_path = args.input_path
         output_path = args.output_path
+        self.output_path = output_path
 
         return stream_path, output_path
 
@@ -139,11 +142,13 @@ class Floss:
 
         # Validate stream/output file types.
         if stream_type != '.txt':
-            print(f'Invalid stream file type {stream_type}, streams must be .txt files.')
+            print(
+                f'Invalid stream file type {stream_type}, streams must be .txt files.')
             return False
 
         if output_type != '.json':
-            print(f'Invalid output file type {output_type}, output must be a .json file.')
+            print(
+                f'Invalid output file type {output_type}, output must be a .json file.')
             return False
 
         return True
@@ -245,7 +250,70 @@ class Floss:
         # Read from stream file for input paths.
         self.read_file_stream(stream_path, output_path)
 
+    def test_read_file_stream(self, stream_path):
+        """Main loop of program."""
+        # Wait for changes in input file.
+        last_size = 0
+        run = True
+        while run:
+            # On change, copy contents of input file. Write contents to given output JSON file.
+            file_size = os.path.getsize(stream_path)
+            output_size = os.path.getsize(self.output_path)
+            if file_size != last_size and output_size == 0:
+                # Attempt to read the path input from stream file
+                with open(stream_path, "r") as f:
+                    data_path = f.readline()
+
+                    print(f'data_path: {data_path}')
+                    # Track the last stock_path entered
+                    last_size = file_size
+
+                    result = self.file_service(data_path, self.output_path)
+                    run = result
+            elif output_size > 0:
+                print('Waiting for space in destination.')
+            else:
+                print('Waiting for input.')
+
+            time.sleep(self.speed)
+
+        print(f'\nStream stopped.')
+
+    def test_loop(self):
+        t = '*********************'
+        print(f'{t}\nENTERING TEST LOOP\n{t}\n')
+        # get args
+        stream_path, output_path = self.argument_handler()
+        # stream_path = 'stream.txt'
+        # output_path = 'output.json'
+        print(F'stream_path: {stream_path}')
+        print(F'output_path: {output_path}\n')
+
+        # Validate args.
+        if not self.validate_arguments(stream_path, output_path):
+            return 'Invalid args'
+
+        # Check if output_path is empty.
+        if os.path.getsize(output_path) > 0:
+            # Ask user if they want to rewrite the output_path, or exit.
+            text = input(f"{output_path} is not empty. Overwrite? y/n ")
+            text = text.lower()
+            if len(text) > 1:
+                print("Invalid response. Exiting floss.")
+                sys.exit(1)
+            if text == 'y':
+                # Erase contents of output_path
+                open(output_path, 'w').close()
+            else:
+                # Exit
+                print("Exiting floss.")
+                sys.exit(1)
+
+        # Read from stream file for input paths.
+        self.test_read_file_stream(stream_path)
+
 
 if __name__ == '__main__':
     floss = Floss()
-    floss.main_loop()
+    # floss.main_loop()
+    floss.test_loop()
