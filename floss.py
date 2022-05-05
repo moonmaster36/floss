@@ -13,18 +13,16 @@ import json
 import csv
 
 
-class Floss:
+class Floss:    
     def __init__(self):
         self.speed = None
 
     def argument_handler(self):
-        """
-        * Returns arguments given from command line.
-        * Arguments:
-        *   stream_path: path to stream data-paths from.
-        *   json_file: path to write data to.
-        * Both arguments are required.
-        * Allows users to get help by adding modifier -help
+        """Returns arguments given from command line.
+
+        Returns:
+            stream_path: path to stream data-paths from
+            output_path: path to write data to
         """
         parser = argparse.ArgumentParser(prog="floss",
                                          description="Converts stock data from text and csv files to json",
@@ -51,7 +49,14 @@ class Floss:
 
     @staticmethod
     def get_txt_data(txt_file):
-        """Handles retrieval of data from .txt files."""
+        """Fetches data from .txt file
+
+        Args:
+            txt_file (.txt): file containing data
+
+        Returns:
+            list: list of dictionaries
+        """
         if not os.path.isfile(txt_file):
             print('File does not exist.')
             return
@@ -81,14 +86,11 @@ class Floss:
 
     @staticmethod
     def txt_service(data, output_path):
-        """
-        * Handles .txt input files.
-        * Retrieves data from file specified in txt_file, converts data to JSON,
-            then writes data to file specified in json_file.
+        """Converts data from .txt source to json then writes data to output_path.
 
-        :param data: stock data to write to file.
-        :param output_path: file to write json data to
-        :return: None
+        Args:
+            data (list): stock data
+            output_path (.json file): path to output file
         """
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
@@ -101,6 +103,15 @@ class Floss:
 
     @staticmethod
     def get_csv_data(path):
+        """Fetches data from .csv file and converts the data
+            into a list .
+
+        Args:
+            path (.csv): path to csv data
+
+        Returns:
+            list of dictionaries, each dictionary is a row from csv data
+        """
         with open(path, 'r') as file:
             reader = csv.DictReader(file)
             data = []
@@ -112,18 +123,19 @@ class Floss:
         """
         * Extracts data from .csv file and writes it to the
             specified output in JSON format.
-        * csvfile: path to .cvs file containing data.
-        * json_file: path to .json file to write data.
+        
+        csvfile: path to .cvs file containing data.
+        json_file: path to .json file to write data.
         """
+        
         data = self.get_csv_data(csv_path)
 
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
             # Get last part of path for cleaner printing.
-            # cur_path = os.path.basename(os.path.normpath(txt_file))
             file_path = pathlib.PurePath(output_path)
-            print(f'floss wrote data to {file_path}')
+            print(f'floss wrote data from {csv_path} to {file_path}')
 
     @staticmethod
     def validate_arguments(stream_path, output_path):
@@ -283,41 +295,34 @@ class Floss:
         # Read from stream file for input paths.
         self.test_read_file_stream(stream_path)
 
-        def test_read_file_stream(self, stream_path):
-            """Main loop of program."""
-            # Wait for changes in input file.
-            last_size = 0
-            data_written = False
-            run = True
-            input_message_written = False
+    def test_read_file_stream(self, stream_path):
+        """Main loop of program."""
+        # Wait for changes in input file.
+        last_size = 0
+        last_path = ''
+        run = True
 
-            while run:
-                # On change, copy contents of input file. Write contents to given output JSON file.
-                file_size = os.path.getsize(stream_path)
-                output_size = os.path.getsize(self.output_path)
-                
-                
-                if file_size > 0 and output_size == 0:
-                    # Attempt to read the path input from stream file
-                    with open(stream_path, "r") as f:
-                        data_path = f.readline()
-
+        while run:
+            # On change, copy contents of input file. Write contents to given output JSON file.
+            file_size = os.path.getsize(stream_path)
+            output_size = os.path.getsize(self.output_path)
+            
+            if file_size > 0 and output_size == 0:
+                # Attempt to read the path input from stream file
+                with open(stream_path, "r") as f:
+                    data_path = f.readline()
+                    if data_path != last_path:  # If this is a new path, fetch data.
                         print(f'data_path: {data_path}')
                         # Track the last stock_path entered
                         last_size = file_size
-
-                        result = self.file_service(data_path, self.output_path)
+                        last_path = data_path
+                        result = self.file_service(
+                            data_path, self.output_path)
                         run = result
 
-                elif output_size > 0 and file_size > 0:
-                    print('Waiting for space in destination.')
-                elif file_size == 0 and not input_message_written:
-                    print('Waiting for input.')
-                    input_message_written = True
+            time.sleep(self.speed)
 
-                time.sleep(self.speed)
-
-            print(f'\nStream stopped.')
+        print(f'\nStream stopped.')
 
 
 if __name__ == '__main__':
