@@ -27,6 +27,3 @@ To change the program speed.
 ```bash
 python floss -s 0.5 stock-data.csv output.json
 ```
-
-##### CS361 Microservice
-
