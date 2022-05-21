@@ -8,9 +8,9 @@
  Place floss.py in the root folder of your project directory.
 
 ## Instructions
-1. Run the program by specifying the input path and output path. (use -s to adjust speed)
-2. Request data by writing a file path to chosen input file.
-3. Retrieve retrieve data by reading from chosen output file.
+1. Run the program by specifying the input path and output path. (use -s to adjust refresh rate)
+3. Request data by writing a file path to chosen input file.
+4. Retrieve data by reading from chosen output file.
 
 
 ## Usage
@@ -27,6 +27,3 @@ To change the program speed.
 ```bash
 python floss -s 0.5 stock-data.csv output.json
 ```
-
-##### CS361 Microservice
-
