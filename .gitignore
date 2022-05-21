@@ -2,3 +2,5 @@ input.txt
 output.json
 data
 test-commands.txt
+.idea
+.vscode
