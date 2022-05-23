@@ -22,21 +22,21 @@ class Floss:
         self.output_path = None
 
     def argument_handler(self):
-        """
-        * Returns arguments given from command line.
-        * Arguments:
-        *   stream_path: path to stream data-paths from.
-        *   json_file: path to write data to.
-        * Both arguments are required.
-        * Allows users to get help by adding modifier -help
+        """Returns arguments given from command line.
+
+        Returns:
+            stream_path: path to stream data-paths from
+            output_path: path to write data to
         """
         parser = argparse.ArgumentParser(prog="floss",
-                                         description="Converts text and csv files to json",
-                                         usage="%(prog)s [options] input_path output_path")
+                                         description="Converts stock data from text and csv files to json",
+                                         usage="python %(prog)s.py [options] input_path output_path")
         parser.add_argument("-s", "--speed", help="Changes how quickly the stream_path is re-checked.",
-                            type=int, action='store', default=1)
-        parser.add_argument("input_path", help="Text file containing path to data file", type=str)
-        parser.add_argument("output_path", help="JSON file to write data to", type=str)
+                            type=float, action='store', default=1)
+        parser.add_argument(
+            "input_path", help="Text file containing path to data", type=str)
+        parser.add_argument(
+            "output_path", help="JSON file to write data to", type=str)
 
         args = parser.parse_args()
 
@@ -44,8 +44,12 @@ class Floss:
             print(f'speed cannot be negative')
 
         self.speed = args.speed
+        print(f'speed = {self.speed}')
+
         stream_path = args.input_path
         output_path = args.output_path
+        self.stream_path = output_path
+        self.output_path = output_path
 
         return stream_path, output_path
 
