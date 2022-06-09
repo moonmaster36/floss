@@ -82,7 +82,7 @@ class Floss:
 
             return {'data': stocks}
 
-    def txt_service(self, data, output_path):
+    def txt_service(self, data_path, output_path):
         """
         * Handles .txt input files.
         * Retrieves data from file specified in txt_file, converts data to JSON,
@@ -93,7 +93,7 @@ class Floss:
         :return: None
         """
         with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+            json.dump(data_path, f, ensure_ascii=False, indent=4)
 
             # Get last part of path for cleaner printing.
             # cur_path = os.path.basename(os.path.normpath(txt_file))
