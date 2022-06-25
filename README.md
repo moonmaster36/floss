@@ -1,6 +1,4 @@
 # floss - a financial data conversion tool
-
-## Description
 * Converts stock data from .csv and .txt files to json
 * Default refresh rate is 1 second.
 
