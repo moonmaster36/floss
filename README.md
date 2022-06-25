@@ -16,7 +16,7 @@
 python floss.py [-s speed] <input_path> <output_path>
 ```
 
-## Examples
+## Example Usage
 To use the default program speed.
 ```bash
 python floss stock-data.csv output.json
